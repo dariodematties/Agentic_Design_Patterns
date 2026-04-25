@@ -1,45 +1,209 @@
 # Agentic Design Patterns
 
-This repository contains two small LangChain examples built with OpenAI models.
+This repository contains a small set of Python examples that explore agentic design patterns with:
 
-## Files
+- LangChain + OpenAI
+- Google ADK + Gemini
 
-- `Code_1.py`: a simple two-step LCEL chain that:
+The code is organized as a progression from simple sequential chains to coordinator and parallel multi-agent workflows.
+
+## Repository Contents
+
+### `Code_1.py`
+
+A simple sequential LangChain LCEL example using OpenAI.
+
+What it does:
 - extracts technical specifications from free text
-- transforms them into a JSON-like output with `cpu`, `memory`, and `storage`
+- transforms the extracted information into a JSON-like structure with `cpu`, `memory`, and `storage`
 
-- `Code_2.py`: a simple coordinator-style example that:
-- classifies a user request as `booking`, `info`, or `unclear`
-- routes the request to a simulated handler
-- prints the delegated result
+Key libraries:
+- `langchain-openai`
+- `langchain-core`
+
+API key:
+- `OPENAI_API_KEY`
+
+Run:
+
+```bash
+python Code_1.py
+```
+
+### `Code_2.py`
+
+A LangChain coordinator-style routing example using OpenAI.
+
+What it does:
+- classifies a request into booking or information handling
+- routes the request through a coordinator chain
+- delegates to simulated Python handlers
+- prints the final delegated result
+
+Key libraries:
+- `langchain-openai`
+- `langchain-core`
+
+API key:
+- `OPENAI_API_KEY`
+
+Run:
+
+```bash
+python Code_2.py
+```
+
+### `Code_3.py`
+
+A Google ADK coordinator example using Gemini.
+
+What it does:
+- defines a coordinator agent plus specialized sub-agents
+- wraps Python functions as ADK tools
+- creates an in-memory session and runner
+- delegates booking or information requests through ADK
+- prints the final response text
+
+Key libraries:
+- `google-adk`
+- `google-genai`
+
+API key:
+- `GOOGLE_API_KEY` or `GEMINI_API_KEY`
+
+Run:
+
+```bash
+python Code_3.py
+```
+
+Notes:
+- this example depends on Gemini quota and billing availability
+- if you see `429 RESOURCE_EXHAUSTED`, the issue is usually project quota rather than Python code
+- you may see warnings about `function_call` parts in the returned content; those indicate tool usage, not necessarily failure
+
+### `Code_4.py`
+
+A LangChain parallel-processing example using OpenAI.
+
+What it does:
+- runs three chains in parallel for the same topic
+- produces:
+  - a summary
+  - a list of interesting questions
+  - a set of key terms
+- synthesizes the parallel outputs into a single final response
+
+Key libraries:
+- `langchain-openai`
+- `langchain-core`
+
+API key:
+- `OPENAI_API_KEY`
+
+Run:
+
+```bash
+python Code_4.py
+```
+
+### `Code_5.py`
+
+A Google ADK parallel-agent example using Gemini and Google Search.
+
+What it does:
+- creates three research agents that run in parallel
+- each sub-agent researches one sustainability topic:
+  - renewable energy
+  - electric vehicles
+  - carbon capture
+- stores each result in shared session state
+- runs a synthesis agent after the parallel stage
+- prints the final structured report
+
+Key libraries:
+- `google-adk`
+- `google-genai`
+
+API key:
+- `GOOGLE_API_KEY` or `GEMINI_API_KEY`
+
+Run:
+
+```bash
+python Code_5.py
+```
+
+Notes:
+- this example uses the Google Search tool through ADK
+- because it is a multi-step parallel workflow, runtime depends on model/tool availability and Gemini quota
 
 ## Setup
 
-Install the Python dependencies:
+Create and activate a virtual environment, then install the base dependencies:
 
 ```bash
+python -m venv .venv
+source .venv/bin/activate
+python -m pip install --upgrade pip
 python -m pip install -r requirements.txt
+```
+
+## Additional Dependencies For ADK Examples
+
+`requirements.txt` currently includes the LangChain dependencies, but the ADK examples also require additional packages.
+
+To run `Code_3.py` and `Code_5.py`, install:
+
+```bash
+python -m pip install google-adk google-genai
+```
 
 ## Environment Variables
 
-Both scripts use OpenAI and require:
+### OpenAI examples
 
-export OPENAI_API_KEY="your_api_key_here"
+For `Code_1.py`, `Code_2.py`, and `Code_4.py`:
 
-## Run
+```bash
+export OPENAI_API_KEY="your_openai_api_key"
+```
 
-Run the first example:
+### Gemini / Google ADK examples
 
-python Code_1.py
+For `Code_3.py` and `Code_5.py`:
 
-Run the second example:
+```bash
+export GOOGLE_API_KEY="your_google_api_key"
+```
 
-python Code_2.py
+You can also use:
 
-## Notes
+```bash
+export GEMINI_API_KEY="your_google_api_key"
+```
 
-- Code_1.py uses langchain_openai.ChatOpenAI to run a basic sequential LCEL workflow.
-- Code_2.py uses langchain_openai.ChatOpenAI plus RunnableBranch to simulate a coordinator delegating work to sub-agents.
-- requirements.txt currently still includes langchain-google-genai, although the current version of Code_2.py no longer uses
-it.
+## Current Dependency Status
 
+The current `requirements.txt` in this repository contains:
+
+```txt
+langchain-core
+langchain-openai
+langchain-google-genai
+```
+
+This means:
+- the LangChain examples are represented in `requirements.txt`
+- the ADK examples work, but their required packages are not yet listed in `requirements.txt`
+- `langchain-google-genai` is currently present even though the active examples no longer depend on it directly
+
+## Summary
+
+This repository currently demonstrates:
+
+- sequential LangChain workflows
+- manual routing with LangChain
+- parallel LangChain processing
+- coordinator-style agent orchestration with Google ADK
+- parallel multi-agent research and synthesis with Google ADK
