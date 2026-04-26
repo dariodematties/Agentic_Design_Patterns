@@ -5,7 +5,7 @@ This repository contains a small set of Python examples that explore agentic des
 - LangChain + OpenAI
 - Google ADK + Gemini
 
-The code is organized as a progression from simple sequential chains to coordinator, parallel, and reflection-based agent workflows.
+The code is organized as a progression from simple sequential chains to coordinator, parallel, reflection, and review-based agent workflows.
 
 ## Repository Contents
 
@@ -167,6 +167,34 @@ Notes:
 - this example loads environment variables from a local `.env` file if present
 - it demonstrates a reflection pattern rather than tool-based multi-agent orchestration
 
+### `Code_7.py`
+
+A Google ADK draft-and-review pipeline example using Gemini.
+
+What it does:
+- creates a draft-writing agent and a reviewer agent
+- runs both agents sequentially through an ADK `SequentialAgent`
+- stores the generated paragraph in shared state as `draft_text`
+- passes that draft to a reviewer that returns a structured critique in `review_output`
+- executes the pipeline end to end with an in-memory runner
+
+Key libraries:
+- `google-adk`
+- `google-genai`
+
+API key:
+- `GOOGLE_API_KEY` or `GEMINI_API_KEY`
+
+Run:
+
+```bash
+python Code_7.py
+```
+
+Notes:
+- this example demonstrates sequential draft generation followed by critique
+- the sample request uses quantum computing to make the review stage more demanding
+
 ## Setup
 
 Create and activate a virtual environment, then install the base dependencies:
@@ -178,13 +206,7 @@ python -m pip install --upgrade pip
 python -m pip install -r requirements.txt
 ```
 
-## Additional Dependency Note
-
-`Code_6.py` imports `python-dotenv` to load `OPENAI_API_KEY` from a local `.env` file. If that package is not already installed in your environment, install it with:
-
-```bash
-python -m pip install python-dotenv
-```
+`Code_6.py` also uses `python-dotenv` so it can load `OPENAI_API_KEY` from a local `.env` file.
 
 ## Environment Variables
 
@@ -198,7 +220,7 @@ export OPENAI_API_KEY="your_openai_api_key"
 
 ### Gemini / Google ADK examples
 
-For `Code_3.py` and `Code_5.py`:
+For `Code_3.py`, `Code_5.py`, and `Code_7.py`:
 
 ```bash
 export GOOGLE_API_KEY="your_google_api_key"
@@ -220,12 +242,13 @@ langchain-openai
 langchain-google-genai
 google-adk
 google-genai
+python-dotenv
 ```
 
 This means:
 - the LangChain and ADK examples are represented in `requirements.txt`
 - `langchain-google-genai` is currently present even though the active examples shown in this repository do not depend on it directly
-- `python-dotenv` is used by `Code_6.py` but is not currently listed in `requirements.txt`
+- `python-dotenv` is included to support the `.env` loading used by `Code_6.py`
 
 ## Summary
 
@@ -237,3 +260,4 @@ This repository currently demonstrates:
 - reflection loops with LangChain
 - coordinator-style agent orchestration with Google ADK
 - parallel multi-agent research and synthesis with Google ADK
+- sequential draft-and-review pipelines with Google ADK
