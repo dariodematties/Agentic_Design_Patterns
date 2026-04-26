@@ -5,7 +5,7 @@ This repository contains a small set of Python examples that explore agentic des
 - LangChain + OpenAI
 - Google ADK + Gemini
 
-The code is organized as a progression from simple sequential chains to coordinator and parallel multi-agent workflows.
+The code is organized as a progression from simple sequential chains to coordinator, parallel, and reflection-based agent workflows.
 
 ## Repository Contents
 
@@ -138,6 +138,35 @@ Notes:
 - this example uses the Google Search tool through ADK
 - because it is a multi-step parallel workflow, runtime depends on model/tool availability and Gemini quota
 
+### `Code_6.py`
+
+A LangChain reflection-loop example using OpenAI.
+
+What it does:
+- asks the model to write a Python `calculate_factorial` function
+- runs an iterative generate-and-critique loop
+- uses a reviewer prompt to inspect the current code against the original requirements
+- stops early if the reviewer returns `CODE_IS_PERFECT`
+- prints the refined code after the loop completes
+
+Key libraries:
+- `langchain-openai`
+- `langchain-core`
+- `python-dotenv`
+
+API key:
+- `OPENAI_API_KEY`
+
+Run:
+
+```bash
+python Code_6.py
+```
+
+Notes:
+- this example loads environment variables from a local `.env` file if present
+- it demonstrates a reflection pattern rather than tool-based multi-agent orchestration
+
 ## Setup
 
 Create and activate a virtual environment, then install the base dependencies:
@@ -149,21 +178,19 @@ python -m pip install --upgrade pip
 python -m pip install -r requirements.txt
 ```
 
-## Additional Dependencies For ADK Examples
+## Additional Dependency Note
 
-`requirements.txt` currently includes the LangChain dependencies, but the ADK examples also require additional packages.
-
-To run `Code_3.py` and `Code_5.py`, install:
+`Code_6.py` imports `python-dotenv` to load `OPENAI_API_KEY` from a local `.env` file. If that package is not already installed in your environment, install it with:
 
 ```bash
-python -m pip install google-adk google-genai
+python -m pip install python-dotenv
 ```
 
 ## Environment Variables
 
 ### OpenAI examples
 
-For `Code_1.py`, `Code_2.py`, and `Code_4.py`:
+For `Code_1.py`, `Code_2.py`, `Code_4.py`, and `Code_6.py`:
 
 ```bash
 export OPENAI_API_KEY="your_openai_api_key"
@@ -191,12 +218,14 @@ The current `requirements.txt` in this repository contains:
 langchain-core
 langchain-openai
 langchain-google-genai
+google-adk
+google-genai
 ```
 
 This means:
-- the LangChain examples are represented in `requirements.txt`
-- the ADK examples work, but their required packages are not yet listed in `requirements.txt`
-- `langchain-google-genai` is currently present even though the active examples no longer depend on it directly
+- the LangChain and ADK examples are represented in `requirements.txt`
+- `langchain-google-genai` is currently present even though the active examples shown in this repository do not depend on it directly
+- `python-dotenv` is used by `Code_6.py` but is not currently listed in `requirements.txt`
 
 ## Summary
 
@@ -205,5 +234,6 @@ This repository currently demonstrates:
 - sequential LangChain workflows
 - manual routing with LangChain
 - parallel LangChain processing
+- reflection loops with LangChain
 - coordinator-style agent orchestration with Google ADK
 - parallel multi-agent research and synthesis with Google ADK
